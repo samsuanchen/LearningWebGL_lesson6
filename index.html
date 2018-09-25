@@ -12,6 +12,7 @@
     </ul>
 </body>
 <script type="text/javascript">
+////////////////////////////////////////////////////////////////////
 var shader_fs = `
     precision mediump float;
     varying vec2 vTextureCoord;
@@ -19,6 +20,7 @@ var shader_fs = `
     void main(void) {
         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
 }`
+////////////////////////////////////////////////////////////////////
 var shader_vs = `
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
@@ -28,7 +30,18 @@ var shader_vs = `
     void main(void) {
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         vTextureCoord = aTextureCoord;
-}`////////////////////////////////////////////////////////////////////
+}`
+var gl = canvas.getContext("webgl");
+////////////////////////////////////////////////////////////////////
+function initGL(canvas) {
+	try { gl.viewportWidth = canvas.width;
+		  gl.viewportHeight = canvas.height;
+	} catch (e) {
+	}
+	if (!gl) { alert("Could not initialise WebGL, sorry :-(");
+	}
+}
+////////////////////////////////////////////////////////////////////
 var shaderProgram;
 ////////////////////////////////////////////////////////////////////
 function initShaders() {
@@ -64,92 +77,55 @@ function initShaders() {
 	shaderProgram.uSampler = gl.getUniformLocation(shaderProgram, "uSampler");
 }
 ////////////////////////////////////////////////////////////////////
-
-
-    function handleLoadedTexture(textures) {
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-        gl.bindTexture(gl.TEXTURE_2D, textures[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[0].image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-
-        gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[1].image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-        gl.bindTexture(gl.TEXTURE_2D, textures[2]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[2].image);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-        gl.generateMipmap(gl.TEXTURE_2D);
-
-        gl.bindTexture(gl.TEXTURE_2D, null);
-    }
-
-
-    var crateTextures = Array();
-
-    function initTexture() {
-        var crateImage = new Image();
-
-        for (var i=0; i < 3; i++) {
-            var texture = gl.createTexture();
-            texture.image = crateImage;
-            crateTextures.push(texture);
-        }
-
-        crateImage.onload = function () {
-            handleLoadedTexture(crateTextures)
-        }
-        crateImage.src = "crate.gif?" + new Date().getTime();
-		crateImage.setAttribute('crossOrigin', '');
-    }
-
-
+function handleLoadedTexture(textures) {
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+	gl.bindTexture(gl.TEXTURE_2D, textures[0]);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[0].image);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[1].image);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.bindTexture(gl.TEXTURE_2D, textures[2]);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[2].image);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+	gl.generateMipmap(gl.TEXTURE_2D);
+	gl.bindTexture(gl.TEXTURE_2D, null);
+}
+////////////////////////////////////////////////////////////////////
+var crateTextures = Array();
+function initTexture() {
+	var crateImage = new Image();
+	for (var i=0; i < 3; i++) {
+		var texture = gl.createTexture();
+		texture.image = crateImage;
+		crateTextures.push(texture);
+	}
+	crateImage.onload = function () {
+		handleLoadedTexture(crateTextures)
+	}
+	crateImage.src = "crate.gif?" + new Date().getTime();
+	crateImage.setAttribute('crossOrigin', '');
+}
+////////////////////////////////////////////////////////////////////
     var mvMatrix = mat4.create();
     var mvMatrixStack = [];
     var pMatrix = mat4.create();
-
-    function mvPushMatrix() {
-        var copy = mat4.create();
-        mat4.set(mvMatrix, copy);
-        mvMatrixStack.push(copy);
-    }
-
-    function mvPopMatrix() {
-        if (mvMatrixStack.length == 0) {
-            throw "Invalid popMatrix!";
-        }
-        mvMatrix = mvMatrixStack.pop();
-    }
-
-
-    function setMatrixUniforms() {
-        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
-    }
-
-
+////////////////////////////////////////////////////////////////////
     function degToRad(degrees) {
         return degrees * Math.PI / 180;
     }
-
-
+////////////////////////////////////////////////////////////////////
     var xRot = 0;
     var xSpeed = 0;
-
     var yRot = 0;
     var ySpeed = 0;
-
     var z = -5.0;
-
     var filter = 0;
-
-
     var currentlyPressedKeys = {};
-
+////////////////////////////////////////////////////////////////////
     function handleKeyDown(event) {
         currentlyPressedKeys[event.keyCode] = true;
 
@@ -160,13 +136,11 @@ function initShaders() {
             }
         }
     }
-
-
+////////////////////////////////////////////////////////////////////
     function handleKeyUp(event) {
         currentlyPressedKeys[event.keyCode] = false;
     }
-
-
+////////////////////////////////////////////////////////////////////
     function handleKeys() {
         if (currentlyPressedKeys[33]) {
             // Page Up
@@ -193,11 +167,11 @@ function initShaders() {
             xSpeed += 1;
         }
     }
-
-
+////////////////////////////////////////////////////////////////////
     var cubeVertexPositionBuffer;
     var cubeVertexTextureCoordBuffer;
     var cubeVertexIndexBuffer;
+////////////////////////////////////////////////////////////////////
     function initBuffers() {
         cubeVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
@@ -299,8 +273,7 @@ function initShaders() {
         cubeVertexIndexBuffer.itemSize = 1;
         cubeVertexIndexBuffer.numItems = 36;
     }
-
-
+////////////////////////////////////////////////////////////////////
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -326,13 +299,13 @@ function initShaders() {
         gl.uniform1i(shaderProgram.samplerUniform, 0);
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-        setMatrixUniforms();
+        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
         gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
-
-
+////////////////////////////////////////////////////////////////////
     var lastTime = 0;
-
+////////////////////////////////////////////////////////////////////
     function animate() {
         var timeNow = new Date().getTime();
         if (lastTime != 0) {
@@ -343,17 +316,14 @@ function initShaders() {
         }
         lastTime = timeNow;
     }
-
-
+////////////////////////////////////////////////////////////////////
     function tick() {
         requestAnimFrame(tick);
         handleKeys();
         drawScene();
         animate();
     }
-
-
-
+////////////////////////////////////////////////////////////////////
     function webGLStart() {
         var canvas = document.getElementById("lesson06-canvas");
         initGL(canvas);
@@ -369,6 +339,6 @@ function initShaders() {
 
         tick();
     }
-
+////////////////////////////////////////////////////////////////////
 </script>
 </html>
