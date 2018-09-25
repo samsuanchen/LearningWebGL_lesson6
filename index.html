@@ -113,21 +113,23 @@ var shader_vs = `
     }
 	
     var crateTextures = Array();
+	var file = ['crate.gif', 'nehe.gif', 'test.gif'];
 
     function initTexture() {
-        var crateImage = new Image();
+        
 
         for (var i=0; i < 3; i++) {
             var texture = gl.createTexture();
+			var crateImage = new Image();
             texture.image = crateImage;
+			crateImage.onload = function () {
+				handleLoadedTexture(crateTextures[i])
+			}
+			crateImage.src = file[i] + '?' + new Date().getTime();
+			crateImage.setAttribute('crossOrigin', '');
             crateTextures.push(texture);
         }
 
-        crateImage.onload = function () {
-            handleLoadedTexture(crateTextures)
-        }
-        crateImage.src = 'crate.gif?' + new Date().getTime();
-		crateImage.setAttribute('crossOrigin', '');
     }
 
 
