@@ -12,7 +12,7 @@
     </ul>
 </body>
 <script>
-var shader-fs = `
+var shader_fs = `
     precision mediump float;
 
     varying vec2 vTextureCoord;
@@ -22,7 +22,7 @@ var shader-fs = `
     void main(void) {
         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
     }`
-var shader-vs = `
+var shader_vs = `
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
 
@@ -56,14 +56,14 @@ var shader-vs = `
 
     function initShaders() {
         var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-		gl.shaderSource(fragmentShader, shader-fs);
+		gl.shaderSource(fragmentShader, shader_fs);
 		gl.compileShader(fragmentShader);
         if (!gl.getShaderParameter(fragmenthader, gl.COMPILE_STATUS)) {
             alert(gl.getShaderInfoLog(fragmenthader));
             return null;
         }
         var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-		gl.shaderSource(vertexShader, shader-vs);
+		gl.shaderSource(vertexShader, shader_vs);
 		gl.compileShader(vertexShader);
         if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
             alert(gl.getShaderInfoLog(vertexSshader));
