@@ -37,13 +37,11 @@ var shader_vs = `
         vTextureCoord = aTextureCoord;
     }`
 
-    var gl;
+    var gl = canvas.getContext("webgl");
 
-    function initGL(canvas) {
-        try {
-            gl = canvas.getContext("webgl");
-            gl.viewportWidth = canvas.width;
-            gl.viewportHeight = canvas.height;
+    function initGL() {
+        try { gl.viewportWidth = canvas.width;
+              gl.viewportHeight = canvas.height;
         } catch (e) {
         }
         if (!gl) {
@@ -358,8 +356,7 @@ var shader_vs = `
 
 
     function webGLStart() {
-        var canvas = document.getElementById("lesson06-canvas");
-        initGL(canvas);
+        initGL();
         initShaders();
         initBuffers();
         initTexture();
