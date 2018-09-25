@@ -56,8 +56,8 @@ var shader_vs = `
         var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 		gl.shaderSource(fragmentShader, shader_fs);
 		gl.compileShader(fragmentShader);
-        if (!gl.getShaderParameter(fragmenthader, gl.COMPILE_STATUS)) {
-            alert(gl.getShaderInfoLog(fragmenthader));
+        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(fragmentShader));
             return null;
         }
         var vertexShader = gl.createShader(gl.VERTEX_SHADER);
