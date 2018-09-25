@@ -154,7 +154,8 @@
         crateImage.onload = function () {
             handleLoadedTexture(crateTextures)
         }
-        crateImage.src = "crate.gif";
+        crateImage.src = "crate.gif?" + new Date().getTime();
+		crateImage.setAttribute('crossOrigin', '');
     }
 
 
