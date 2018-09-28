@@ -127,13 +127,15 @@ function initShaders() {
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 	shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
 }	
-function handleLoadedTexture(texture) {
-	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-	gl.bindTexture(gl.TEXTURE_2D, texture);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+function handleLoadedTextures(textures) {
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  for(var i = 0; i < 3; i++) {
+	gl.bindTexture(gl.TEXTURE_2D, textures[i]);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[i].image);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-	gl.bindTexture(gl.TEXTURE_2D, null);
+  }
+  gl.bindTexture(gl.TEXTURE_2D, null);
 }	
 var crateTextures = Array();
 function initTexture() {
@@ -143,7 +145,7 @@ function initTexture() {
 	image0.setAttribute('crossOrigin', '');
 	texture0.image = image0;
 	image0.onload = function () {
-		handleLoadedTexture(texture0)
+		handleLoadedTextures(crateTextures)
 	}
 	crateTextures.push(texture1);
 	var texture1 = gl.createTexture();
@@ -151,18 +153,14 @@ function initTexture() {
 	image1.src = 'nehe.gif?' + new Date().getTime();
 	image1.setAttribute('crossOrigin', '');
 	texture1.image = image1;
-	image1.onload = function () {
-		handleLoadedTexture(texture1)
-	}
+//	image1.onload = function () { handleLoadedTexture(texture1) }
 	crateTextures.push(texture1);
 	var texture2 = gl.createTexture();
 	var image2 = new Image();
 	image2.src = 'test.gif?' + new Date().getTime();
 	image2.setAttribute('crossOrigin', '');
 	texture2.image = image2;
-	image2.onload = function () {
-		handleLoadedTexture(texture2)
-	}
+//	image2.onload = function () { handleLoadedTexture(texture2) }
 	crateTextures.push(texture2);
 }
 var mvMatrix = mat4.create();
