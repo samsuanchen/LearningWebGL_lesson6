@@ -242,7 +242,7 @@ function tick(now) {
 	now = now || 0;
 	handleKeys();
 	drawScene(now);
-	requestAnimFrame(now);
+	requestAnimFrame(tick);
 }
 function webGLStart() {
 	initGL();
