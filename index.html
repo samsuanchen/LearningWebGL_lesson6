@@ -144,9 +144,7 @@ function initTexture() {
 	image0.src = 'crate.gif?' + new Date().getTime();
 	image0.setAttribute('crossOrigin', '');
 	texture0.image = image0;
-	image0.onload = function () {
-		handleLoadedTextures(crateTextures)
-	}
+//	image0.onload = function () { handleLoadedTexture(texture2) }
 	crateTextures.push(texture1);
 	var texture1 = gl.createTexture();
 	var image1 = new Image();
@@ -160,7 +158,9 @@ function initTexture() {
 	image2.src = 'test.gif?' + new Date().getTime();
 	image2.setAttribute('crossOrigin', '');
 	texture2.image = image2;
-//	image2.onload = function () { handleLoadedTexture(texture2) }
+	image2.onload = function () {
+		handleLoadedTextures(crateTextures)
+	}
 	crateTextures.push(texture2);
 }
 var mvMatrix = mat4.create();
