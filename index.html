@@ -152,7 +152,7 @@ function initTexture() {
 	image1.setAttribute('crossOrigin', '');
 	texture1.image = image1;
 	image1.onload = function () {
-		handleLoadedTexture(texture01)
+		handleLoadedTexture(texture1)
 	}
 	crateTextures.push(texture1);
 	var texture2 = gl.createTexture();
@@ -249,7 +249,7 @@ function webGLStart() {
 	initShaders();
 	initBuffers();
 	initTexture();
-	gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	gl.clearColor(0.2, 0.2, 0.2, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 	document.onkeydown = handleKeyDown;
 	document.onkeyup = handleKeyUp;
