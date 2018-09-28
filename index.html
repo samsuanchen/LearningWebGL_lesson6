@@ -126,24 +126,14 @@ function initShaders() {
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 	shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-}	
-function handleLoadedTextures(textures) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-  for(var i = 0; i < 3; i++) {
-	gl.bindTexture(gl.TEXTURE_2D, textures[i]);
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[i].image);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  }
-  gl.bindTexture(gl.TEXTURE_2D, null);
-}		
+}
 function handleLoadedTexture(texture) {
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 	gl.bindTexture(gl.TEXTURE_2D, texture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.bindTexture(gl.TEXTURE_2D, null);
+	gl.bindTexture(gl.TEXTURE_2D, null);
 }	
 var crateTextures = Array();
 function initTexture() {
@@ -170,7 +160,6 @@ function initTexture() {
 	texture2.image = image2;
 	image2.onload = function () { handleLoadedTexture(texture2); }
 	crateTextures.push(texture2);
-	
 }
 var mvMatrix = mat4.create();
 var mvMatrixStack = [];
@@ -197,12 +186,18 @@ function handleKeyUp(event) {
 	currentlyPressedKeys[event.keyCode] = false;
 }
 function handleKeys() {
-	     if (currentlyPressedKeys[33])      z -= .05; // Page Up
-	else if (currentlyPressedKeys[34])      z += .05; // Page Down
-	else if (currentlyPressedKeys[37]) ySpeed -= 1  ; // Left cursor key
-	else if (currentlyPressedKeys[39]) ySpeed += 1  ; // Right cursor key
-	else if (currentlyPressedKeys[38]) xSpeed -= 1  ; // Up cursor key
-	else if (currentlyPressedKeys[40]) xSpeed += 1  ; // Down cursor key
+	     if (currentlyPressedKeys[33])
+											z -= .05; // Page Up
+	else if (currentlyPressedKeys[34])
+										    z += .05; // Page Down
+	else if (currentlyPressedKeys[37])
+									   ySpeed -= 1  ; // Left cursor key
+	else if (currentlyPressedKeys[39])
+									   ySpeed += 1  ; // Right cursor key
+	else if (currentlyPressedKeys[38])
+									   xSpeed -= 1  ; // Up cursor key
+	else if (currentlyPressedKeys[40])
+									   xSpeed += 1  ; // Down cursor key
 }
 var cubeVertexPositionBuffer;
 var cubeVertexTextureCoordBuffer;
